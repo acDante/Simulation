@@ -2,10 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include<QGraphicsScene>
+#include <QGraphicsScene>
 #include <QGraphicsItem>
-#include<QPainter>
-#include<QTime>
+#include <QPainter>
+#include <QTime>
+#include <QTimer>
 #include "LinkedList.h"
 #include "attrdlg.h"
 
@@ -45,7 +46,7 @@ class Passenger
 {
     bool inLift;//是否在电梯里（1表示“是”，0表示“否”）
     bool signal;//是否发出了请求标志（1表示“是”，0表示“否”）
-    bool up;//是否上行（1表示“上行”，0表示“下行”）
+    bool up;    //是否上行（1表示“上行”，0表示“下行”）
     int atFloor;//当前所在楼层
     int toFloor;//所要前往楼层（随机生成，当随机的前往楼层是1时，认为乘客已经离开大楼）
     static QTime inOutTime;//乘客上下电梯的时间
@@ -81,14 +82,13 @@ class Floor
 class Elevator
 {
 public:
-    bool up;//是否上行（1表示“上行”，0表示“下行”）
-    bool stop;//电梯是否停止（1表示“停止”，0表示“没有停止”）
+    int status;   //"1"表示上行，"0"表示停止，"-1"表示i下行
     bool isEmpty;//当前电梯是否为空载
     bool isRunning;//电梯是否处在仿真
     int maxPeopleNumber;//电梯内最多可容纳人数
     int peopleNumber;//当前电梯内人数
-    int atFloor;//当前所在楼层
-    int maxFloor;//候梯时间最大乘客所在楼层
+    int curFloor;//当前所在楼层
+    int nextFloor;//候梯时间最大乘客所在楼层
     double doorEnergy;//电梯开关门的能耗
     double floorUpEnergy;//电梯上行一层的能耗
     double floorDownEnergy;//电梯下行一层的能耗
@@ -100,9 +100,33 @@ public:
 
     Elevator();//电梯构造函数
     int searchMaxTime();//寻找所有乘客中的最大候梯时间
-    int searchMaxFloor();//寻找等待时间最长的乘客的所在楼层
+    int searchNextFloor();//寻找等待时间最长的乘客的所在楼层
     void stay();//电梯停靠的函数
     void run();//电梯运行的函数
+};
+//******************************************************************************
+
+//虚拟时钟类
+class VTime         // 模拟一天的时间流逝 按照 现实1ms = 虚拟10s 来换算(这个比例暂定)
+{
+public:
+    int hour;       // 按照24小时制
+    int minute;
+    int second;
+
+    VTime();
+    void GetCurVTime(int* time_sequence); // 获取当前虚拟时间
+    int GetCurVHour();  // 获取当前虚拟时间的小时部分
+    int GetCurVMin();   // 获取当前虚拟时间的分钟部分
+    int GetTotalVSecs();// 当前虚拟时间共经过多少秒
+    void start();       // 虚拟时间开始流逝
+    void stop();        // 虚拟时间停止
+
+public slots:
+    void pass();        // 虚拟时间的流逝过程
+
+private:
+    QTimer* realtime;
 };
 
 //******************************************************************************

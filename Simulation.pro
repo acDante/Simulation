@@ -17,16 +17,15 @@ SOURCES += main.cpp\
     Frame.cpp \
     Door.cpp \
     attrdlg.cpp \
-    LinkedList.cpp \
     elevator.cpp \
     passenger.cpp \
-    floor.cpp
+    floor.cpp \
+    VTime.cpp
 
 HEADERS  += mainwindow.h \
     F:/Hundred Project/Simulation/LinkedList.h \
     F:/Hundred Project/Simulation/LinkedList.h \
     F:/Hundred Project/Simulation/LinkedList.h \
-    LinkedList.h \
     attrdlg.h
 
 FORMS    += mainwindow.ui \

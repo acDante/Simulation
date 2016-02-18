@@ -17,7 +17,7 @@ Elevator::Elevator(){
 
     //随机生成电梯的初始停靠楼层
     //srand((unsigned)time(0));
-    atFloor = rand()%5 + 1;
+    curFloor = rand()%5 + 1;
 
     doorEnergy = DOOR_ENERGY;
     floorUpEnergy = FLOOR_UP_ENERGY;
@@ -39,14 +39,14 @@ int Elevator::searchMaxTime(){
     return maxTime;
 }
 
-int Elevator::searchMaxFloor(){
+int Elevator::searchNextFloor(){
     int maxTime = 0;
-    int maxFloor = 0;
+    int nextFloor = 0;
     for(int i = 0;i<5;i++){
         if(maxTime<this->floor[i].searchMaxTime())
-            maxFloor = i;
+            nextFloor = i;
     }
-    return maxFloor;
+    return nextFloor;
 }
 
 void Elevator::stay(){
@@ -54,12 +54,12 @@ void Elevator::stay(){
 }
 
 void Elevator::run(){
-    this->maxFloor = searchMaxFloor();
+    this->nextFloor = searchnextFloor();
     this->stop = false;
-    if(this->maxFloor<atFloor)
+    if(this->nextFloor<curFloor)
         this->up = false;
     else{
-        if(this->maxFloor>atFloor)
+        if(this->nextFloor>curFloor)
             this->up = true;
 
         //else
