@@ -11,6 +11,7 @@
 #include "attrdlg.h"
 
 #define MAX_PEOPLE_NUM 100 //整个仿真过程中最大的乘梯人数
+typedef  int* time_sequence;
 
 namespace Ui {
 class MainWindow;
@@ -110,12 +111,10 @@ public:
 class VTime         // 模拟一天的时间流逝 按照 现实1ms = 虚拟10s 来换算(这个比例暂定)
 {
 public:
-    int hour;       // 按照24小时制
-    int minute;
-    int second;
+    QTime vtime;     // 按照24小时制
 
     VTime();
-    void GetCurVTime(int* time_sequence); // 获取当前虚拟时间
+    QTime GetCurVTime(); // 获取当前虚拟时间
     int GetCurVHour();  // 获取当前虚拟时间的小时部分
     int GetCurVMin();   // 获取当前虚拟时间的分钟部分
     int GetTotalVSecs();// 当前虚拟时间共经过多少秒
