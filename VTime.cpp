@@ -1,5 +1,6 @@
 #include "mainwindow.h"
-
+#define rtime_interval 1     // 单位为毫秒
+// 当前换算： 现实世界 1ms = 虚拟时间 0.5s
 VTime::VTime()
 {
     vtime.setHMS(8,0,0);    // 初始时间为上午的8:00
@@ -9,7 +10,7 @@ VTime::VTime()
 
 void VTime::start() // 虚拟时间开始流逝
 {
-    realtime->start(1);
+    realtime->start(rtime_interval);
 }
 
 void VTime::stop()  // 虚拟时间停止
@@ -19,10 +20,10 @@ void VTime::stop()  // 虚拟时间停止
 
 void VTime::pass()  // 虚拟时间流逝的过程
 {
-    vtime = vtime.addSecs(10);
+    vtime = vtime.addSecs(1/2 * rtime_interval);
 }
 
-QTime VTime::GetCurVTime() // 用时间序列数组获取当前的虚拟时间
+QTime VTime::GetCurVTime()  // 用时间序列数组获取当前的虚拟时间
 {
     return vtime;
 }

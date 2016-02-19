@@ -67,4 +67,9 @@ void Elevator::run(){
     }
 }
 
+int Elevator::GetCurFloor()
+{
+    return curFloor;
+}
+
 

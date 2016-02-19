@@ -68,10 +68,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lcdNumber->setStyleSheet("background-color: black");
     attrdlg = new AttrDlg;
 
-    //乘客指针数组
+    // 乘客指针数组
     p = new Passenger*[MAX_PEOPLE_NUM];
-    //电梯
+    // 电梯
     elevator = new Elevator();
+    // 虚拟时钟应该在哪里声明
+    // v_time = new VTime();
 }
 
 MainWindow::~MainWindow()
@@ -81,7 +83,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_StartSimul_clicked()
 {
-
+    v_time.start();   // 虚拟时间开始流逝
 }
 
 void MainWindow::on_Settings_clicked()
