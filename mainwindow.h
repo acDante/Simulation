@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <QTime>
 #include <QTimer>
+#include <QMutableLinkedListIterator>
 #include "LinkedList.h"
 #include "attrdlg.h"
 
@@ -21,10 +22,12 @@
 #define STAY 1     // 停留
 #define WAIT 2     // 等待电梯
 #define INLIFT 3   // 在电梯中
-// 乘客发出的请求类型
-#define UP 1       // 上行请求
+// 乘客发出的请求类型         and 电梯的状态
+#define UP 1       // 上行请求 | 上行中
 #define NONE 0     // 无请求
-#define DOWN -1    // 下行请求
+#define DOWN -1    // 下行请求 | 下行中
+
+#define STOP 0     // 停止
 
 
 namespace Ui {
@@ -61,32 +64,46 @@ class Passenger
     int request; // 乘客发出请求的类型 （1表示“发出上行请求”，0表示“未发出请求”，-1表示“下行请求”）
     int srcFloor;// 乘客发出乘梯请求时所在的楼层
     int desFloor;// 乘客所要前往楼层（随机生成一个与当前所在楼层不同的数）
-    int status; // 乘客在当前楼层的状态 （"1"表示停留在该楼层工作,"2"表示等待电梯,"3"表示在电梯里）
-    static int inOutTime;// 乘客上下电梯的时间
+    int status;  // 乘客在当前楼层的状态 （"1"表示停留在该楼层工作,"2"表示等待电梯,"3"表示在电梯里）
+    //static int inOutTime;// 乘客上下电梯的时间
     QTime requestTime;   // 乘客发出乘梯请求的时刻
     QTime getinTime;     // 乘客乘上电梯的时刻
     QTime arrivalTime;   // 乘客到达所前往楼层的时刻
     int stayTime;        // 乘客所前往楼层的停留时间（随机生成）
     int tolerationTime;  // 乘客最大忍受时限
 
-    Passenger();            //乘客的构造函数
-    void getIn(VTime& t);           //进入电梯
-    void getOut(VTime& t);  //走出电梯
-    void sendSignal(VTime& t);//发出信号
-    void stay(VTime& t);    //在楼层停留
+    Passenger();            // 乘客的构造函数
+    void getIn(VTime& t);   // 进入电梯
+    void getOut(VTime& t);  // 走出电梯
+    void sendSignal(VTime& t);// 发出信号
+    void stay(VTime& t);    // 在楼层停留
+    void UpdateWaitTime(VTime& t);  //不断更新当前乘客的等待时间，如果等待时间超出最大忍耐时限会发出leave()信号
+
+signals:
+    void come(Passenger* p);  // 开始等待电梯
+    void leave(Passenger* p); // 超过最大忍耐时限时，乘客会选择离开，向楼层类Floor[srcFLoor]发出leave()信号
+                              // 楼层类接到该信号会将该乘客从链表删去
 };
 
 //******************************************************************************
-
+//楼层类： 用于管理等待乘客的链队列
 class Floor
 {
     friend class Elevator;
-    bool signal;//本楼层是否有乘客发出了请求标志（1表示“是”，0表示“否”）
-    int peopleNumber;//本楼层当前人数
-    Passenger *people;//指向当前楼层中的乘客链表
-    int longestWaitTime;//本楼层最长等待时间;
+    bool hasWaitingPerson;      // 本楼层是否有乘客发出了请求标志（1表示“是”，0表示“否”）-->在add第一项和delete第一项后可能发生变化，通过PeopleNum == 0？ 来判断
+    int peopleNum;    // 本楼层当前等待电梯的乘客数 --> 即链表项数
+    int longestWaitTime;// 本楼层最长等待时间; --> 即队列头的乘客的等待时间 （一直在变 如何处理）
 
-    static int searchMaxTime();//寻找本楼层乘客中的最大候梯时间
+    Passenger* searchMaxTime(int& max_time,VTime& t);// 寻找本楼层乘客中的最大候梯时间 --》遍历乘客链表 找出最大候梯时间和乘客指针
+
+public slots:
+    void AddPerson(Passenger* p, VTime &t);    // 在链队列里加入新乘客p
+    void DeletePerson(Passenger* p, VTime &t); // 将链队列里的乘客p删除
+
+private:
+    Floor();
+    QLinkedList<Passenger> queue;    // 当前楼层中处于等待电梯状态的乘客的链队列
+    QLinkedList<Passenger>::iterator itr;  // 用于遍历乘客链队列的迭代器
 };
 
 //******************************************************************************
@@ -95,7 +112,7 @@ class Floor
 class Elevator
 {
 public:
-    int status;   //"1"表示上行，"0"表示停止，"-1"表示i下行
+    int status;   //"1"表示上行，"0"表示停止，"-1"表示下行
     bool isEmpty;//当前电梯是否为空载
     bool isRunning;//电梯是否处在仿真
     int maxPeopleNumber;//电梯内最多可容纳人数
@@ -172,7 +189,7 @@ public:
     Passenger** p;
     //电梯
     Elevator *elevator;
-    //VTime v_time;
+    VTime v_time;
 
 private slots:
     void on_StartSimul_clicked();
