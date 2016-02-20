@@ -122,16 +122,16 @@ public:
     double doorEnergy;   //电梯开关门的能耗
     double floorUpEnergy;//电梯上行一层的能耗
     double floorDownEnergy;//电梯下行一层的能耗
-    Floor *floor;       //楼层
+    //Floor *floor;       //楼层
     int doorTime;//开关门的时间
     int floorTime;//电梯运行一层的时间
 
 
     Elevator();//电梯构造函数
-    int searchMaxTime(int& nextFloor);//寻找所有乘客中的最大候梯时间,通过nextFloor返回当前等待时间最长的乘客所在的楼层
+    int searchMaxTime(int& nextFloor, Floor* floor);//寻找所有乘客中的最大候梯时间,通过nextFloor返回当前等待时间最长的乘客所在的楼层
     void stay();//电梯停靠的函数
-    void run();//电梯运行的函数
-    void MoveOneFloor();  // 描述电梯行驶一层的函数
+    void run(Floor* floor); //电梯运行的函数
+    void MoveOneFloor(Floor* floor);  // 描述电梯行驶一层的函数
     int GetCurFloor(); // 获取电梯当前所在楼层
 
 private:
