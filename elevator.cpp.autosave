@@ -44,21 +44,11 @@ int Elevator::searchMaxTime(int& nextFloor){
     return maxTime;
 }
 
-int Elevator::searchNextFloor(){
-    int maxTime = 0;
-    int nextFloor = 0;
-    for(int i = 0; i < 5; i++){
-        if(maxTime < this->floor[i].searchMaxTime())
-            nextFloor = i;
-    }
-    return nextFloor;
-}
-
 void Elevator::stay(){
     this->stop = true;
 }
 
-void Elevator::run(){
+void Elevator::run(Floor* floor){
     this->nextFloor = searchnextFloor();
     this->stop = false;
     if(this->nextFloor < curFloor)
