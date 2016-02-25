@@ -8,8 +8,9 @@
 #define DOOR_TIME 5;
 #define FLOOR_TIME 3;
 
-Elevator::Elevator(){
-    stop = true;
+Elevator::Elevator()
+{
+    status = STOP;
     isEmpty = true;
     isRunning = false;
     maxPeopleNumber = MAX_PEOPLE_NUMBER;
@@ -27,35 +28,40 @@ Elevator::Elevator(){
     //floorTime = FLOOR_TIME;
 
     //楼层
-    floor = new Floor[5];
+   // floor = new Floor[5];
 }
 
-int Elevator::searchMaxTime(int& nextFloor){
+int Elevator::searchMaxTime(int& nextFloor,Floor* floor, VTime& t)
+{
     int maxTime = 0;
     nextFloor = 0;
+    int temp = 0;
     for(int i = 0; i < 5; i++)
     {
-        if(maxTime < this->floor[i].searchMaxTime())
+        floor[i].searchMaxTime(temp, t);
+        if(maxTime < temp)
         {
-            maxTime = this->floor[i].searchMaxTime();
+            maxTime = temp;
             nextFloor = i + 1;
         }
     }
     return maxTime;
 }
 
-void Elevator::stay(){
-    this->stop = true;
+void Elevator::stay()
+{
+    this->status = STOP;
 }
 
-void Elevator::run(Floor* floor){
-    this->nextFloor = searchnextFloor();
-    this->stop = false;
+void Elevator::run(Floor* floor,VTime& t)
+{
+    searchMaxTime(this->nextFloor, floor, t);
+    this->status = STOP;
     if(this->nextFloor < curFloor)
-        this->up = false;
+        this->status = DOWN;
     else{
         if(this->nextFloor > curFloor)
-            this->up = true;
+            this->status = UP;
 
         //else
           //  this->up = ;

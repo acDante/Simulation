@@ -83,7 +83,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_StartSimul_clicked()
 {
-    v_time.start();   // 虚拟时间开始流逝
+    //v_time->start();   // 虚拟时间开始流逝
 }
 
 void MainWindow::on_Settings_clicked()

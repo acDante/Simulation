@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <QtCore>
 #define rtime_interval 1     // 单位为毫秒
 // 当前换算： 现实世界 1ms = 虚拟时间 0.5s
 VTime::VTime()

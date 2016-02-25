@@ -58,9 +58,33 @@ protected:
 };
 //******************************************************************************
 
+//虚拟时钟类
+class VTime         // 模拟一天的时间流逝 按照 现实1ms = 虚拟10s 来换算(这个比例暂定)
+{
+    Q_OBJECT
+
+public:
+    VTime();
+    QTime GetCurVTime(); // 获取当前虚拟时间
+    int GetCurVHour();   // 获取当前虚拟时间的小时部分
+    int GetCurVMin();    // 获取当前虚拟时间的分钟部分
+    int GetTotalVSecs(); // 当前虚拟时间共经过多少秒
+    void start();        // 虚拟时间开始流逝
+    void stop();         // 虚拟时间停止
+
+public slots:
+    void pass();         // 虚拟时间的流逝过程
+
+private:
+    QTimer* realtime;
+    QTime vtime;         // 按照24小时制
+
+};
+//******************************************************************************
 //乘客类
 class Passenger
 {
+public:
     int request; // 乘客发出请求的类型 （1表示“发出上行请求”，0表示“未发出请求”，-1表示“下行请求”）
     int srcFloor;// 乘客发出乘梯请求时所在的楼层
     int desFloor;// 乘客所要前往楼层（随机生成一个与当前所在楼层不同的数）
@@ -128,37 +152,17 @@ public:
 
 
     Elevator();//电梯构造函数
-    int searchMaxTime(int& nextFloor, Floor* floor);//寻找所有乘客中的最大候梯时间,通过nextFloor返回当前等待时间最长的乘客所在的楼层
+    int searchMaxTime(int& nextFloor,Floor* floor,VTime& t);//寻找所有乘客中的最大候梯时间,通过nextFloor返回当前等待时间最长的乘客所在的楼层
     void stay();//电梯停靠的函数
-    void run(Floor* floor); //电梯运行的函数
+    void run(Floor* floor,VTime& t); //电梯运行的函数
     void MoveOneFloor(Floor* floor);  // 描述电梯行驶一层的函数
     int GetCurFloor(); // 获取电梯当前所在楼层
 
 private:
-    QLinkedList<QLinkedList<Passenger>> *people;    //指向在电梯中的乘客链表  ? 相同目标楼层的乘客存在同一个链表中， 用链表的数组好还是链表的链表？？
-    QLinkedList<QLinkedList<Passenger>>::iterator itr;
+    QLinkedList<QLinkedList<Passenger> > *people;    //指向在电梯中的乘客链表  ? 相同目标楼层的乘客存在同一个链表中， 用链表的数组好还是链表的链表？？
+    QLinkedList<QLinkedList<Passenger> >::iterator itr;
 };
-//******************************************************************************
 
-//虚拟时钟类
-class VTime         // 模拟一天的时间流逝 按照 现实1ms = 虚拟10s 来换算(这个比例暂定)
-{
-public:
-    VTime();
-    QTime GetCurVTime(); // 获取当前虚拟时间
-    int GetCurVHour();   // 获取当前虚拟时间的小时部分
-    int GetCurVMin();    // 获取当前虚拟时间的分钟部分
-    int GetTotalVSecs(); // 当前虚拟时间共经过多少秒
-    void start();        // 虚拟时间开始流逝
-    void stop();         // 虚拟时间停止
-
-public slots:
-    void pass();         // 虚拟时间的流逝过程
-
-private:
-    QTimer* realtime;
-    QTime vtime;         // 按照24小时制
-};
 
 //******************************************************************************
 
@@ -192,7 +196,7 @@ public:
     Passenger** p;
     //电梯
     Elevator *elevator;
-    VTime v_time;
+    VTime* v_time;
 
 private slots:
     void on_StartSimul_clicked();

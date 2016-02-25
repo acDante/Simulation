@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+ #include "mainwindow.h"
 #include<QPixmap>
 void Door::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {

@@ -24,7 +24,7 @@ Floor::Floor()
     hasWaitingPerson = 0;
     peopleNum = 0;
     longestWaitTime = 0;
-    itr=queue.begin();     // 迭代器开始指向链表首
+    itr = queue.begin();     // 迭代器开始指向链表首
 }
 
 Passenger* Floor::searchMaxTime(int& max_time, VTime& t)
@@ -42,7 +42,7 @@ Passenger* Floor::searchMaxTime(int& max_time, VTime& t)
         if(- t.GetCurVTime().secsTo(itr -> requestTime) > max_time)
         {
             max_time = - t.GetCurVTime().secsTo(itr -> requestTime);
-            temp = itr;
+            temp = &(*itr);
         }
     }
     return temp;
@@ -59,12 +59,11 @@ void Floor::AddPerson(Passenger* p, VTime &t)  // 在链队列里加入新乘客
 
 void Floor::DeletePerson(Passenger* p, VTime &t)  // 将链队列里的乘客p删除，并返回指向被删除乘客的指针
 {
-    queue.removeOne(*p);
+   /* queue.removeOne(*p);
     peopleNum--;
     if(peopleNum == 0)
     {
         hasWaitingPerson = 0;
-        return NULL;
     }
-    searchMaxTime(longestWaitTime,t);  // 更新最长等待时间
+    searchMaxTime(longestWaitTime,t);  // 更新最长等待时间*/
 }
