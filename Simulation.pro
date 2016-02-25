@@ -20,7 +20,10 @@ SOURCES += main.cpp\
     elevator.cpp \
     passenger.cpp \
     floor.cpp \
-    VTime.cpp
+    VTime.cpp \
+    ElevatorThread.cpp \
+    PeopleThread.cpp \
+    TimeThread.cpp
 
 HEADERS  += mainwindow.h \
     F:/Hundred Project/Simulation/LinkedList.h \

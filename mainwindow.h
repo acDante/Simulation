@@ -11,6 +11,7 @@
 #include "LinkedList.h"
 #include "attrdlg.h"
 
+#define INITIAL_PEOPLE_NUM 15//初次乘坐电梯的人数
 #define MAX_PEOPLE_NUM 100 // 整个仿真过程中最大的乘梯人数
 // 用于产生每名乘客的最大忍耐时限
 #define MIN_WAIT_TIME 300  // 每名乘客的理论最长等待时间（单位为s）
@@ -29,6 +30,14 @@
 
 #define STOP 0     // 停止
 
+//乘客指针数组
+Passenger** p;
+//电梯
+Elevator *elevator;
+VTime* v_time;
+
+//判断仿真程序是否运行的标志
+bool IsRunning;
 
 namespace Ui {
 class MainWindow;
@@ -162,7 +171,59 @@ private:
     QLinkedList<QLinkedList<Passenger> > *people;    //指向在电梯中的乘客链表  ? 相同目标楼层的乘客存在同一个链表中， 用链表的数组好还是链表的链表？？
     QLinkedList<QLinkedList<Passenger> >::iterator itr;
 };
+//******************************************************************************
 
+//电梯线程类
+class ElevatorThread : public QThread
+{
+     Q_OBJECT
+public:
+     ElevatorThread();
+     void opendoor();
+
+protected:
+     void run();
+
+private:
+     Elevator elevator;
+     bool judge;//判断巡检后是否有请求
+
+
+};
+
+
+//******************************************************************************
+
+//乘客线程类
+class PeopleThread : public QThread
+{
+     Q_OBJECT
+public:
+     PeopleThread();
+
+protected:
+     void run();
+
+private:
+     Passenger people;
+     int waitbegintime;
+};
+
+//******************************************************************************
+
+//时间线程类
+class TimeThread : public QThread
+{
+     Q_OBJECT
+public:
+     TimeThread();
+
+protected:
+     void run();
+
+private:
+     int time;
+};
 
 //******************************************************************************
 
@@ -191,12 +252,6 @@ public:
     Door *d4;
     Door *d5;
     AttrDlg *attrdlg;
-
-    //乘客指针数组
-    Passenger** p;
-    //电梯
-    Elevator *elevator;
-    VTime* v_time;
 
 private slots:
     void on_StartSimul_clicked();

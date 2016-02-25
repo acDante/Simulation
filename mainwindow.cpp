@@ -84,6 +84,21 @@ MainWindow::~MainWindow()
 void MainWindow::on_StartSimul_clicked()
 {
     //v_time->start();   // 虚拟时间开始流逝
+    IsRunning = true; //仿真程序开始运行
+
+    // 时间线程的启动
+    timeThread.start();
+
+    // 乘客线程的启动
+    for(int i = 0;i<INITIAL_PEOPLE_NUM;i++)
+    {
+
+        peopleThread[i].start();
+
+    }
+
+    // 电梯线程的启动
+    elevatorThread.start();
 }
 
 void MainWindow::on_Settings_clicked()
