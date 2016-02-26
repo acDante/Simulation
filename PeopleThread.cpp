@@ -5,7 +5,7 @@ PeopleThread::PeopleThread()
     people.toFloor = randomNum();
     people.arrivaltime = gettime();
     people.staytime = 0;
-    wait();
+    //wait();
 
 }
 
@@ -28,7 +28,7 @@ void run()
               people.getIn();
               wait();
               people.getOut();
-          people.arrivaltime = gettime();
+              people.arrivaltime = gettime();
               people.staytime = randomNum();//生成随机等待时间
          }
 

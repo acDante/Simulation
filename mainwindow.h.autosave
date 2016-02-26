@@ -14,6 +14,7 @@
 
 #define INITIAL_PEOPLE_NUM 15//初次乘坐电梯的人数
 #define MAX_PEOPLE_NUM 100 // 整个仿真过程中最大的乘梯人数
+#define MAX_FLOOR   5
 // 用于产生每名乘客的最大忍耐时限
 #define MIN_WAIT_TIME 300  // 每名乘客的理论最长等待时间（单位为s）
 #define MAX_WAIT_TIME 600  // 每名乘客的理论最长等待时间（单位为s）
@@ -100,11 +101,11 @@ public:
     int tolerationTime;  // 乘客最大忍受时限
 
     Passenger();            // 乘客的构造函数
-    void getIn(VTime& t);   // 进入电梯
-    void getOut(VTime& t);  // 走出电梯
-    void sendSignal(VTime& t);// 发出信号
-    void stay(VTime& t);    // 在楼层停留
-    void UpdateWaitTime(VTime& t);  //不断更新当前乘客的等待时间，如果等待时间超出最大忍耐时限会发出leave()信号
+    void getIn(VTime* t);   // 进入电梯
+    void getOut(VTime* t);  // 走出电梯
+    void sendSignal(VTime* t);// 发出信号
+    void stay(VTime* t);    // 在楼层停留
+    void UpdateWaitTime(VTime* t);  //不断更新当前乘客的等待时间，如果等待时间超出最大忍耐时限会发出leave()信号
 
 signals:
     void come(Passenger* p);  // 开始等待电梯
@@ -121,11 +122,11 @@ class Floor
     int peopleNum;    // 本楼层当前等待电梯的乘客数 --> 即链表项数
     int longestWaitTime;// 本楼层最长等待时间; --> 即队列头的乘客的等待时间 （一直在变 如何处理）
 
-    Passenger* searchMaxTime(int& max_time,VTime& t);// 寻找本楼层乘客中的最大候梯时间 --》遍历乘客链表 找出最大候梯时间和乘客指针
+    Passenger* searchMaxTime(int& max_time, VTime *t);// 寻找本楼层乘客中的最大候梯时间 --》遍历乘客链表 找出最大候梯时间和乘客指针
 
 public slots:
-    void AddPerson(Passenger* p, VTime &t);    // 在链队列里加入新乘客p
-    void DeletePerson(Passenger* p, VTime &t); // 将链队列里的乘客p删除
+    void AddPerson(Passenger* p, VTime *t);    // 在链队列里加入新乘客p
+    void DeletePerson(Passenger* p, VTime *t); // 将链队列里的乘客p删除
 
 private:
     Floor();
@@ -200,7 +201,6 @@ protected:
 
 private:
      Passenger people;
-     int waitbegintime;
 };
 
 //******************************************************************************
@@ -259,7 +259,7 @@ private:
 //  乘客指针数组
 Passenger** p;
 //  电梯
-Elevator *elevator;
+Elevator* elevator;
 VTime* v_time;
 
 //  判断仿真程序是否运行的标志
