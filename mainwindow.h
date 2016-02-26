@@ -7,12 +7,14 @@
 #include <QPainter>
 #include <QTime>
 #include <QTimer>
+#include <QThread>
 #include <QMutableLinkedListIterator>
 #include "LinkedList.h"
 #include "attrdlg.h"
 
 #define INITIAL_PEOPLE_NUM 15//初次乘坐电梯的人数
 #define MAX_PEOPLE_NUM 100 // 整个仿真过程中最大的乘梯人数
+#define MAX_FLOOR 5
 // 用于产生每名乘客的最大忍耐时限
 #define MIN_WAIT_TIME 300  // 每名乘客的理论最长等待时间（单位为s）
 #define MAX_WAIT_TIME 600  // 每名乘客的理论最长等待时间（单位为s）
@@ -29,12 +31,6 @@
 #define DOWN -1    // 下行请求 | 下行中
 
 #define STOP 0     // 停止
-
-//乘客指针数组
-Passenger** p;
-//电梯
-Elevator *elevator;
-VTime* v_time;
 
 //判断仿真程序是否运行的标志
 bool IsRunning;
@@ -68,7 +64,7 @@ protected:
 //******************************************************************************
 
 //虚拟时钟类
-class VTime         // 模拟一天的时间流逝 按照 现实1ms = 虚拟10s 来换算(这个比例暂定)
+class VTime:  public QObject  // 模拟一天的时间流逝 按照 现实1ms = 虚拟10s 来换算(这个比例暂定)
 {
     Q_OBJECT
 
@@ -211,6 +207,19 @@ private:
 
 //******************************************************************************
 
+//乘客到达线程类
+class QueueThread : public QThread
+{
+     Q_OBJECT
+public:
+     QueueThread();
+
+protected:
+     void run();
+};
+
+//******************************************************************************
+
 //时间线程类
 class TimeThread : public QThread
 {
@@ -262,6 +271,14 @@ private:
 
 };
 
+//乘客指针数组
+Passenger** p;
+//电梯
+Elevator *elevator;
+VTime* v_time;
 
+TimeThread timeThread;  //时钟线程
+ElevatorThread elevatorThread; // 电梯线程
+PeopleThread*  peopleThread = new PeopleThread[MAX_PEOPLE_NUM];//乘客线程数组
 
 #endif // MAINWINDOW_H

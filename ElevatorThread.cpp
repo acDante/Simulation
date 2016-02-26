@@ -17,7 +17,7 @@ void ElevatorThread::run()
     while(IsRunning == true)
     {
         //巡检所有楼层
-        for(int i = 0; i<MaxFloor;i++)
+        for(int i = 0; i<MAX_FLOOR;i++)
         {
            if(Floor[i].signal == true && Floor[i].longestWaitTime>MaxlongestWaitTime)
            {

@@ -74,6 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
     elevator = new Elevator();
     // 虚拟时钟应该在哪里声明
     v_time = new VTime();
+
 }
 
 MainWindow::~MainWindow()

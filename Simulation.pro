@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     VTime.cpp \
     ElevatorThread.cpp \
     PeopleThread.cpp \
-    TimeThread.cpp
+    TimeThread.cpp \
+    QueueThread.cpp
 
 HEADERS  += mainwindow.h \
     F:/Hundred Project/Simulation/LinkedList.h \

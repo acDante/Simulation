@@ -31,7 +31,7 @@ Elevator::Elevator()
    // floor = new Floor[5];
 }
 
-int Elevator::searchMaxTime(int& nextFloor,Floor* floor, VTime& t)
+/*int Elevator::searchMaxTime(int& nextFloor,Floor* floor, VTime& t)
 {
     int maxTime = 0;
     nextFloor = 0;
@@ -46,7 +46,7 @@ int Elevator::searchMaxTime(int& nextFloor,Floor* floor, VTime& t)
         }
     }
     return maxTime;
-}
+}*/
 
 void Elevator::stay()
 {
