@@ -7,7 +7,10 @@ PeopleThread::PeopleThread()
     people.staytime = 0;
     //wait();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> refs/remotes/origin/test
 
 >>>>>>> refs/remotes/origin/test
 }

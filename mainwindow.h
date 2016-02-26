@@ -260,7 +260,11 @@ private:
 Passenger** p;
 //  电梯
 <<<<<<< HEAD
+<<<<<<< HEAD
 Elevator* elevator;
+=======
+Elevator *elevator;
+>>>>>>> refs/remotes/origin/test
 =======
 Elevator *elevator;
 >>>>>>> refs/remotes/origin/test
