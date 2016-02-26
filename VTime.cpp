@@ -19,9 +19,9 @@ void VTime::stop()  // 虚拟时间停止
     realtime->stop();
 }
 
-void VTime::pass()  // 虚拟时间流逝的过程
+void VTime::pass(int secs = 1/2 * rtime_interval)  // 虚拟时间流逝的过程
 {
-    vtime = vtime.addSecs(1/2 * rtime_interval);
+    vtime = vtime.addSecs(secs);
 }
 
 QTime VTime::GetCurVTime()  // 用时间序列数组获取当前的虚拟时间

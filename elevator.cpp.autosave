@@ -24,7 +24,7 @@ Elevator::Elevator()
     floorUpEnergy = FLOOR_UP_ENERGY;
     floorDownEnergy = FLOOR_DOWN_ENERGY;
     people = NULL;
-    //doorTime = DOOR_TIME;
+    doorTime = DOOR_TIME;
     //floorTime = FLOOR_TIME;
 
     //楼层

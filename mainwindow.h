@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QMutableLinkedListIterator>
 #include <QThread>
+#include <QWaitCondition>
 #include "LinkedList.h"
 #include "attrdlg.h"
 
@@ -21,6 +22,9 @@
 // 用于产生每名乘客的停留时间
 #define MIN_STAY_TIME 1800 // 乘客在某楼层的最短停留时间（单位为s）
 #define MAX_STAY_TIME 3600 // 乘客在某楼层的最长停留时间（单位为s）
+//后续乘客到达的时间间隔
+#define MIN_GAP_TIME 300
+#define MAX_GAP_TIME 600
 // 乘客在当前楼层的状态
 #define STAY 1     // 停留
 #define WAIT 2     // 等待电梯
@@ -173,14 +177,15 @@ class ElevatorThread : public QThread
 {
      Q_OBJECT
 public:
-     ElevatorThread();
-     void opendoor();
+    elevator();
+    void opendoor();
 
 protected:
      void run();
 
 private:
      Elevator elevator;
+     Floor* floor;
      bool judge;//判断巡检后是否有请求
 
 
@@ -201,6 +206,23 @@ protected:
 
 private:
      Passenger people;
+};
+
+//******************************************************************************
+
+//后续乘客到达线程类
+class QueueThread : public QThread
+{
+    Q_OBJECT
+
+protected:
+    void run();
+
+private:
+    int sum;
+    QTime formertime;
+    int gaptime;
+    int passengerNum;
 };
 
 //******************************************************************************
@@ -259,12 +281,13 @@ private:
 //  乘客指针数组
 Passenger** p;
 //  电梯
-Elevator *elevator;
-//  虚拟时钟
+Elevator* elevator;
 VTime* v_time;
 
 //  判断仿真程序是否运行的标志
 bool IsRunning;
 
+//  电梯到达的条件
+QWaitCondition elevatorArrived;
 
 #endif // MAINWINDOW_H

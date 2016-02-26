@@ -1,14 +1,19 @@
 #include "mainwindow.h"
 
-ElevatorThread::ElevatorThread()
+Elevator::Elevator()
 {
- //只要处理Floor[0]的乘客链表就好
+    //实例化楼层数组
+    floor = new floor[5];
 }
 
-//电梯开门时  加开门时间 唤醒要在本层上或者下电梯乘客
+//电梯开门时
 void ElevatorThread::openDoor()
 {
+    //当前时间加上电梯的开门时间
+   v_time->pass(elevator.doorTime);
 
+   //唤醒要在本层上或者下电梯乘客
+   elevatorArrived.wakeAll();
 }
 
 void ElevatorThread::run()
