@@ -259,15 +259,8 @@ private:
 //  乘客指针数组
 Passenger** p;
 //  电梯
-<<<<<<< HEAD
-<<<<<<< HEAD
-Elevator* elevator;
-=======
 Elevator *elevator;
->>>>>>> refs/remotes/origin/test
-=======
-Elevator *elevator;
->>>>>>> refs/remotes/origin/test
+//  虚拟时钟
 VTime* v_time;
 
 //  判断仿真程序是否运行的标志

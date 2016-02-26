@@ -6,13 +6,6 @@ PeopleThread::PeopleThread()
     people.arrivalTime = v_time->GetCurVTime();
     people.staytime = 0;
     //wait();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> refs/remotes/origin/test
-
->>>>>>> refs/remotes/origin/test
 }
 
 void PeopleThread::run()
