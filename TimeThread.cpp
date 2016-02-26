@@ -7,10 +7,10 @@ TimeThread::TimeThread()
 
 void TimeThread::run()
 {
-   while(time<setTime)
+   QTime setTime(18,0,0);
+   while(v_time->GetCurVTime() < setTime)
    {
-      time++;
+      v_time->pass();
    }
-
    IsRunnning = false;
 }

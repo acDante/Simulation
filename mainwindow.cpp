@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+TimeThread timeThread;  //时钟线程
+ElevatorThread elevatorThread; // 电梯线程
+PeopleThread*  peopleThread = new PeopleThread[MAX_PEOPLE_NUM];//乘客线程数组
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -76,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
     v_time = new VTime();
 
 }
+
 
 MainWindow::~MainWindow()
 {
